@@ -1,46 +1,116 @@
-# Getting Started with Create React App
+# usa-map-react | A simple SVG USA map rendering on React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Forked and refactored to use typescript from [https://github.com/gabidavila/react-usa-map](https://github.com/gabidavila/react-usa-map)
 
-## Available Scripts
+This is an alternate version for you that just want a simple customizable map on HTML. This maps shows states delimitations including DC, Alaska, and Hawaii. D3 is not needed.
 
-In the project directory, you can run:
+It uses the [Albers projection](https://en.wikipedia.org/wiki/Albers_projection).
 
-### `yarn start`
+## Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`yarn add usa-map-react`
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+or
 
-### `yarn test`
+`npm install usa-map-react --save`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Usage
 
-### `yarn build`
+The below example shows the mandatory `onClick` event.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```typescript
+import React from "react"
+import { USAMap } from "usa-map-react"
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+const App = () => {
+  /* mandatory */
+  const mapHandler = (event) => {
+    alert(event.target.dataset.name)
+  }
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  return (
+    <div className="App">
+      <USAMap onClick={mapHandler} />
+    </div>
+  )
+}
 
-### `yarn eject`
+export default App
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Example with optional props, `App.js`:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```typescript
+import React, { Component } from "react"
+import "./App.css" /* optional for styling like the :hover pseudo-class */
+import { USAMap } from "usa-map-react"
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+const App = () => {
+  /* mandatory */
+  const mapHandler = (event) => {
+    alert(event.target.dataset.name)
+  }
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+  /* optional customization of filling per state and calling custom callbacks per state */
+  const statesCustomConfig = {
+    NJ: {
+      fill: "navy",
+      clickHandler: (event) =>
+        console.log("Custom handler for NJ", event.target.dataset),
+    },
+    NY: {
+      fill: "#CC0000",
+    },
+  }
 
-## Learn More
+  return (
+    <div className="App">
+      <USAMap customize={statesCustomConfig} onClick={mapHandler} />
+    </div>
+  )
+}
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+export default App
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+`App.css`:
+
+```css
+path {
+  pointer-events: all;
+}
+path:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+```
+
+## All optional props:
+
+| prop             | description                                                  |
+| ---------------- | ------------------------------------------------------------ |
+| `title`          | Content for the Title attribute on the `svg`                 |
+| `width`          | The `width` for rendering, numeric, no `px` suffix           |
+| `height`         | The `height` for rendering, numeric, no `px` suffix          |
+| `defaultFill`    | The default color for filling                                |
+| `customize`      | Optional customization of filling per state                  |
+| `hideStateTitle` | Optional prop to prevent state title from appearing on hover |
+
+Additionally each `path` tag has an abbreviation of the current state followed by a `state` class:
+
+```html
+<path
+  fill="#{custom color or #D3D3D3}"
+  data-name="CA"
+  class="CA state"
+  d="...{polygon dimensions here}..."
+></path>
+```
+
+# License
+
+[MIT](LICENSE.md).
+
+# Sources
+
+The map is sourced from [Wikimedia](<https://commons.wikimedia.org/wiki/File:Blank_US_Map_(states_only).svg>) and is under [Creative Commons Attribution-Share Alike 3.0 Unported](https://spdx.org/licenses/CC-BY-SA-3.0.html) license. This package is inspired on the [react-us-state-map](https://npmjs.com/package/react-us-state-map) package, in fact the initial SVG class system is based on it.

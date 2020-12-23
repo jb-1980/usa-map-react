@@ -2,6 +2,16 @@
   "name": "usa-map-react",
   "version": "0.1.1",
   "private": false,
+  "author": "Joseph Gilgen <gilgenlabs@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "map",
+    "usa",
+    "svg"
+  ],
+  "homepage": "https://github.com/jb-1980/usa-map-react/blob/main/README.md",
+  "repository": "https://github.com/jb-1980/usa-map-react",
   "babel": {
     "presets": [
       "@babel/preset-react"
